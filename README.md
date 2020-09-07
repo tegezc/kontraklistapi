@@ -1,5 +1,5 @@
-# Slim 4 Tutorial
+Project API untuk project kontrak list app. menggunakan PHP SLIM Framework
 
-This is the source code for the Slim 4 tutorial:
 
+Referensi architecture:
 https://odan.github.io/2019/11/05/slim4-tutorial.html
