@@ -41,10 +41,10 @@ final class DashboardKontrakAction
         array $args = []
     ): ResponseInterface {
           // ==== proses kontrak 0 - 90 hari ===============
-        $a90dayslater = date_create('2020-09-01');
+        $a90dayslater = new \DateTime();//date_create('2020-09-01');
         date_add($a90dayslater, date_interval_create_from_date_string('90 days'));
 
-        $dateMulai = date_create('2020-09-01');
+        $dateMulai = new \DateTime();//date_create('2020-09-01');
        
         $mulai = date_format($dateMulai, 'Y-m-d');
         $akhir = date_format($a90dayslater,'Y-m-d');
@@ -53,10 +53,10 @@ final class DashboardKontrakAction
          $data1to90 = $this->kontrakReader->getKontrakBetweenDate($mulai,$akhir);
 
            // ==== proses kontrak 91 - 180 hari ===============
-         $a180dayslater = date_create('2020-09-01');
+         $a180dayslater = new \DateTime();//date_create('2020-09-01');
          date_add($a180dayslater, date_interval_create_from_date_string('180 days'));
        
-         $dateMulai = date_create('2020-09-01');
+         $dateMulai = new \DateTime();//date_create('2020-09-01');
          date_add($dateMulai, date_interval_create_from_date_string('91 days'));
         
          $mulai = date_format($dateMulai, 'Y-m-d');
@@ -66,10 +66,10 @@ final class DashboardKontrakAction
           $data91to180 = $this->kontrakReader->getKontrakBetweenDate($mulai,$akhir);
 
            // ==== proses kontrak 181 - 360 hari ===============
-         $a360dayslater = date_create('2020-09-01');
+         $a360dayslater = new \DateTime();//date_create('2020-09-01');
          date_add($a360dayslater, date_interval_create_from_date_string('360 days'));
        
-         $dateMulai = date_create('2020-09-01');
+         $dateMulai = new \DateTime();//date_create('2020-09-01');
          date_add($dateMulai, date_interval_create_from_date_string('181 days'));
         
          $mulai = date_format($dateMulai, 'Y-m-d');

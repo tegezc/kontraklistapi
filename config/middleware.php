@@ -8,6 +8,9 @@ return function (App $app) {
     // Parse json, form data and xml
     $app->addBodyParsingMiddleware();
 
+    // enable CORS
+    $app->add(\App\Middleware\CorsMiddleware::class);
+
     // Add the Slim built-in routing middleware
     $app->addRoutingMiddleware();
 
