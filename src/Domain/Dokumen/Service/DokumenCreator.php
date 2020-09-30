@@ -49,8 +49,16 @@ final class DokumenCreator
     public function deleteDokumen(int $dokumenid): int
     {
         // delete dokumen
-        $rowDeleted = $this->repository->deleteKontrak($dokumenid);
+        $rowDeleted = $this->repository->deleteDokumen($dokumenid);
 
         return $rowDeleted;// rowCount deleted 
+    }
+
+    public function updateDokumen(array $data):int
+    {
+        // Insert user
+        $dokumenId = $this->repository->updateDokumen($data);
+
+        return $dokumenId;
     }
 }

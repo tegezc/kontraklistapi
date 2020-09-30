@@ -55,5 +55,20 @@ final class DokumenReader
         return $arrayuser;
     }
 
+    /**
+     * Get dokumen by the given kontrak real id.
+     *
+     * @param int $dokumenId The kontrak real id
+     *
+     * @throws DomainException
+     *
+     * @return int max versi
+     */
+    public function getMaxVersionByDok(int $idkontrak,String $jnsdok): int
+    {
+        return $this->repository->getMaxVersionByDok($idkontrak,$jnsdok);
+       
+    }
+
 
 }

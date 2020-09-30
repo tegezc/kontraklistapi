@@ -34,11 +34,11 @@ final class DeleteKontrakAction
      *
      * @return ResponseInterface The response
      */
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
+    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, array $args = []): ResponseInterface
     {
         // Collect input from the HTTP request
-        $data = (array)$request->getParsedBody();
-        $id = $data['id'];
+      //  $data = (array)$request->getParsedBody();
+        $id = (int) $args['id'];
         // Invoke the Domain with inputs and retain the result
         $rowCount = $this->kontrakCreator->deleteKontrak($id);
 

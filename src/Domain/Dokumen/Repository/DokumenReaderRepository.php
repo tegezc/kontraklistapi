@@ -37,7 +37,7 @@ class DokumenReaderRepository
      */
     public function getDokumenById(int $dokumenId): DokumenData
     {
-        $sql = "SELECT * FROM logdokumen WHERE id = :id;";
+        $sql = "SELECT * FROM logdokumen WHERE realid = :id;";
         $statement = $this->connection->prepare($sql);
         $statement->execute(['id' => $dokumenId]);
 
@@ -57,11 +57,41 @@ class DokumenReaderRepository
         $dokumen->versi = $row['versi'];
         $dokumen->jenisDoc = $row['jenis_dok'];
         $dokumen->realIdKontrak = $row['realid_kontrak'];
-        $dokumen->linkPdf = $row['link_pdf'];
-        $dokumen->linkDoc = $row['link_doc'];
+        $dokumen->linkDoc = $row['doc'];
 
         return $dokumen;
     }
+
+    /**
+     * Get dokumen by the given kontrak real id.
+     *
+     * @param int $dokumenId The kontrak real id
+     *
+     * @throws DomainException
+     *
+     * @return int max versi
+     */
+    public function getMaxVersionByDok(int $idkontrak,String $jnsdok): int
+    {
+        $sql = "SELECT * FROM logdokumen WHERE realid_kontrak = :realid_kontrak AND jenis_dok=:jns_dok ORDER BY versi DESC;";
+        $statement = $this->connection->prepare($sql);
+        $statement->execute(['realid_kontrak' => $idkontrak,'jns_dok'=>$jnsdok]);
+
+    
+        $row = $statement->fetchAll();
+
+        // if (!$row) {
+        //     throw new DomainException(sprintf('Dokumen not found: %s', $idkontrak));
+        // }
+        if(count($row)>0){
+            $dok = $row[0];
+            return $dok['versi'];
+        }else{
+            return 0;
+        }
+       
+    }
+
 
     /**
      * @param int $kontrakrealid The kontrak real id
@@ -78,9 +108,10 @@ class DokumenReaderRepository
         $statement->execute(['realidkontrak' => $idkontrak,'jenisDoc' => $codedoc]);
 
         $rows = $statement->fetchAll();
-        if (!$rows) {
-            throw new DomainException(sprintf('Error getAllDokumen'));
-        }
+       
+        // if (!$rows) {
+        //     throw new DomainException(sprintf('Error get detail dokumen'));
+        // }
         return $rows;
     }
 

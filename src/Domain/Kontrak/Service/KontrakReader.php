@@ -38,8 +38,14 @@ final class KontrakReader
     public function getKontrakDetail(int $kontrakid): KontrakData
     {
 
-        $kontrak = $this->repository->getKontrakById($kontrakid);
+        $kontrak = $this->repository->getKontrakByRealId($kontrakid);
 
+        return $kontrak;
+    }
+
+    public function getKontrakById(int $kontrakid):array
+    {
+        $kontrak = $this->repository->getKontrakById($kontrakid);
         return $kontrak;
     }
 
@@ -62,6 +68,21 @@ final class KontrakReader
     public function getKontrakBetweenDate($dateawal,$dateakhir):array
     {
         $arrayuser = $this->repository->getKontrakBetweenDate($dateawal,$dateakhir);
+
+        return $arrayuser;
+    }
+
+    /**
+     * @param stream: String realid stream  jika null: all
+     * @param typekontrak: 1:draft, 2:existing, 3:amandemen, jika 0 : all, not allow NULL value
+     *
+     * @throws DomainException
+     *
+     * @return KontrakData[] List of kontrak data
+     */
+    public function getKontrakFilter($stream, $typekontrak): array
+    {
+        $arrayuser = $this->repository->getKontrakFilter($stream, $typekontrak);
 
         return $arrayuser;
     }

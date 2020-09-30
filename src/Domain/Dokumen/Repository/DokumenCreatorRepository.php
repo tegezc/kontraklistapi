@@ -33,20 +33,16 @@ class DokumenCreatorRepository
      */
     public function insertDokumen(array $dokumen): int
     {
-        $date = new \DateTime('now', new \DateTimeZone('Asia/Jakarta'));
-        $date = $date->format('d-m-Y H:i:s a');
-        $stamp = strtotime($date); // get unix timestamp
-        $time_in_ms = $stamp * 1000;
+        $milliseconds = round(microtime(true) * 1000);
         $row = [
-            'realid' => $time_in_ms,
+            'realid' => $milliseconds,
             'keterangan' => $dokumen['keterangan'],
             'nama_reviewer' => $dokumen['nama_reviewer'],
             'tanggal' => $dokumen['tanggal'],
             'versi' => $dokumen['versi'],
             'jenis_dok' => $dokumen['jenis_dok'],
             'realid_kontrak' => $dokumen['realid_kontrak'],
-            'link_pdf' => $dokumen['link_pdf'],
-            'link_doc' => $dokumen['link_doc'],
+            'doc' => $dokumen['doc'],
         ];
 
         $sql = "INSERT INTO logdokumen SET 
@@ -56,13 +52,37 @@ class DokumenCreatorRepository
                 tanggal=:tanggal, 
                 versi=:versi, 
                 jenis_dok=:jenis_dok, 
-                realid_kontrak=:realid_kontrak, 
-                link_pdf=:link_pdf, 
-                link_doc=:link_doc;";
+                realid_kontrak=:realid_kontrak,
+                doc=:doc;";
 
         $this->connection->prepare($sql)->execute($row);
 
         return (int)$this->connection->lastInsertId();
+    }
+
+     /**
+     * update Dokumen row.
+     *
+     * @param $dokumen The dokumen
+     *
+     * @return int The update ID
+     */
+    public function updateDokumen(array $dokumen):int
+    {
+      
+        $row = [
+            'keterangan' => $dokumen['keterangan'],
+            'nama_reviewer' => $dokumen['nama_reviewer'],
+            'realid' => $dokumen['realid']
+        ];
+       
+        $sql = "UPDATE logdokumen SET 
+                keterangan=:keterangan, 
+                nama_reviewer=:nama_reviewer WHERE realid=:realid";
+
+        $result = $this->connection->prepare($sql)->execute($row);
+
+        return $result;
     }
 
      /**
@@ -74,7 +94,7 @@ class DokumenCreatorRepository
      */
     public function deleteDokumen(int $dokumenid): int
     {
-        $sql = "DELETE FROM logdokumen WHERE id= :dokumenid;";
+        $sql = "DELETE FROM logdokumen WHERE realid= :dokumenid;";
 
         $stmt = $this->connection->prepare($sql);
         $stmt->execute(['dokumenid'=>$dokumenid]);

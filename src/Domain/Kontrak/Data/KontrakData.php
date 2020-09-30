@@ -70,6 +70,9 @@ final class KontrakData {
 
       /** @var string */
     public $kontrakAwal;
+
+    /** @var int */
+    public $flagberakhir;
   
 
   }

@@ -3,6 +3,8 @@
 namespace App\Action\Kontrak;
 
 use App\Domain\Kontrak\Service\KontrakCreator;
+use App\Domain\Kontrak\Service\KontrakReader;
+
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -15,15 +17,17 @@ final class UpdateKontrakAction
      * @var KontrakCreator
      */
     private $kontrakCreator;
+    private $kontrakReader;
 
     /**
      * The constructor.
      *
      * @param KontrakCreator $kontrakCreator The user creator
      */
-    public function __construct(KontrakCreator $kontrakCreator)
+    public function __construct(KontrakCreator $kontrakCreator,KontrakReader $kontrakReader)
     {
         $this->kontrakCreator = $kontrakCreator;
+        $this->kontrakReader = $kontrakReader;
     }
 
     /**
@@ -34,21 +38,25 @@ final class UpdateKontrakAction
      *
      * @return ResponseInterface The response
      */
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
+    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, array $args = []): ResponseInterface
     {
         // Collect input from the HTTP request
         $data = (array)$request->getParsedBody();
 
+        $id = (int) $args['id'];
+        $idkon = (int) $data['id'];
+
         // Invoke the Domain with inputs and retain the result
         $kontrakId = $this->kontrakCreator->updateKontrak($data);
 
-        // Transform the result into the JSON representation
-        $result = [
-            'id' => $kontrakId
-        ];
+        if($kontrakId>0){
+             // get kontrak data
+            $kontrakData = $this->kontrakReader->getKontrakById($idkon);
+        }
+       
 
         // Build the HTTP response
-        $response->getBody()->write((string)json_encode($result));
+        $response->getBody()->write((string)json_encode($kontrakData));
 
         return $response->withHeader('Content-Type', 'application/json')->withStatus(201);
     }

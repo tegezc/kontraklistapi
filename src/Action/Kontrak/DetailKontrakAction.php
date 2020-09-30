@@ -5,6 +5,7 @@ namespace App\Action\Kontrak;
 use App\Domain\Dokumen\Service\DokumenReader;
 use App\Domain\Kontrak\Service\KontrakReader;
 use App\Domain\Dokumen\Data\TypeDokumenData;
+use App\Domain\Stream\Service\StreamReader;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -19,16 +20,18 @@ final class DetailKontrakAction
      */
     private $kontrakReader;
     private $dokumenReader;
+    private $streamReader;
 
     /**
      * The constructor.
      *
      * @param KontrakReader $userReader The kontrak reader
      */
-    public function __construct(KontrakReader $kontrakReader, DokumenReader $dokumenReader)
+    public function __construct(KontrakReader $kontrakReader, DokumenReader $dokumenReader,StreamReader $streamReader)
     {
         $this->kontrakReader = $kontrakReader;
         $this->dokumenReader = $dokumenReader;
+        $this->streamReader = $streamReader;
     }
 
     /**
@@ -70,6 +73,9 @@ final class DetailKontrakAction
         $dokumenTypeSP = TypeDokumenData::sp();
         $dokumenSP = $this->dokumenReader->getDokumenByCode($kontrakData->realID, $dokumenTypeSP->code);
 
+        //get all stream
+        $allstream = $this->streamReader->getAllStream();
+
         $dataresponse = array(
             "detail" => $kontrakData,
             "pe" => $dokumenPE,
@@ -77,6 +83,7 @@ final class DetailKontrakAction
             "st" => $dokumenST,
             "hps" => $dokumenHPS,
             "sp" => $dokumenSP,
+            "stream"    => $allstream
         );
 
         // Build the HTTP response

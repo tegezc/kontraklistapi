@@ -33,12 +33,15 @@ class KontrakCreatorRepository
      */
     public function insertKontrak(array $kontrak): int
     {
-        $date = new \DateTime('now', new \DateTimeZone('Asia/Jakarta'));
-        $date = $date->format('d-m-Y H:i:s a');
-        $stamp = strtotime($date); // get unix timestamp
-        $time_in_ms = $stamp * 1000;
+        // echo (int)( PHP_INT_MAX);
+        // $date = new \DateTime();//('now', new \DateTimeZone('Asia/Jakarta'));
+        // $date = $date->format('d-m-Y H:i:s a');
+        // $stamp = strtotime($date); // get unix timestamp
+        // $time_in_ms = $stamp * 1000;
+        // echo $time_in_ms;
+        $milliseconds = round(microtime(true) * 1000);
         $row = [
-            'realid' => $time_in_ms,
+            'realid' => $milliseconds,
             'nokontrak' => $kontrak['nokontrak'],
             'nama' => $kontrak['nama'],
             'namaunit' => $kontrak['namaunit'],
@@ -90,6 +93,7 @@ class KontrakCreatorRepository
     }
 
     /**
+     * perlu di ingat, value kosong harus di set NULL
      * update kontrak row.
      *
      * @param array $kontrak The kontrak
@@ -99,7 +103,7 @@ class KontrakCreatorRepository
     public function updateKontrak(array $kontrak)
     {
         $row = [
-            'id' => $kontrak['id'],
+            'realid' => $kontrak['realid'],
             'nokontrak' => $kontrak['nokontrak'],
             'nama' => $kontrak['nama'],
             'namaunit' => $kontrak['namaunit'],
@@ -120,6 +124,7 @@ class KontrakCreatorRepository
             'direksi' => $kontrak['direksi'],
             'penandatangan' => $kontrak['penandatangan'],
             'kontrak_awal' => $kontrak['kontrak_awal'],
+            'flagberakhir'=>$kontrak['flagberakhir'],
         ];
 
         $sql = "UPDATE kontrak SET
@@ -142,7 +147,8 @@ class KontrakCreatorRepository
              email_pic_vendor  =:email_pic_vendor,
              direksi  =:direksi,
              penandatangan  =:penandatangan,
-             kontrak_awal  =:kontrak_awal WHERE id= :id;";
+             kontrak_awal  =:kontrak_awal,
+             flagberakhir =:flagberakhir WHERE realid= :realid;";
 
         $result = $this->connection->prepare($sql)->execute($row);
 
@@ -158,7 +164,7 @@ class KontrakCreatorRepository
      */
     public function deleteKontrak(int $kontrakid): int
     {
-        $sql = "DELETE FROM kontrak WHERE id= :kontrakid;";
+        $sql = "DELETE FROM kontrak WHERE realid= :kontrakid;";
 
         $stmt = $this->connection->prepare($sql);
         $stmt->execute(['kontrakid'=>$kontrakid]);

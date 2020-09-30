@@ -13,8 +13,7 @@ namespace App\Domain\Dokumen\Data;
     public $tanggal;
     public $versi;
     public $jenisDoc;
-    public $linkPdf;
-    public $linkDoc;
+    public $doc;
   
   }
   // |Column|Type|Null|Default
