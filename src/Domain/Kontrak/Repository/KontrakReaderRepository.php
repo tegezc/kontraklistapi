@@ -153,7 +153,7 @@ class KontrakReaderRepository
     public function getKontrakBetweenDate($dateawal, $dateakhir): array
     {
 
-        $sql = "SELECT * FROM kontrak WHERE tanggal_berakhir BETWEEN ? AND ?;";
+        $sql = "SELECT * FROM kontrak WHERE tanggal_berakhir BETWEEN ? AND ? ORDER BY tanggal_berakhir ASC;";
         $statement = $this->connection->prepare($sql);
         $statement->execute(array($dateawal, $dateakhir));
 
